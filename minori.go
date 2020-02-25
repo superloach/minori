@@ -36,6 +36,14 @@ const (
   DEBUG = 6
 )
 
+func (l *Logger) GetLogger(name string) *Logger {
+  return &Logger{
+    Name: l.Name + "/" + name,
+    Out: l.Out,
+    Level: l.Level,
+  }
+}
+
 func (l *Logger) log(level int, msg string) {
   logl := LogLevel
   if l.Level != -1 { logl = l.Level }
