@@ -10,12 +10,12 @@ import (
 	"github.com/mattn/go-colorable"
 )
 
-var LogLevel = 6
+var LogLevel = DEBUG
 
 // SetLevel sets the global log level.
 // Panics if level is invalid.
 func SetLevel(level int) {
-	if level > 6 || level < 0 {
+	if level > DEBUG || level < OFF {
 		panic("Invalid Log Level.")
 	}
 
@@ -61,8 +61,8 @@ func (l *Logger) log(level int, msg string) {
 		ws = " "
 	}
 
-	fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
-		time.Now().Format(time.StampMilli),
+	fmt.Fprintf(l.Out, "\x1b[94m[%s]%s\x1b[0m \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
+		time.Now().Format(time.Stamp),
 		getColorByLevel(level), getMessageByLevel(level), ws,
 		l.Name, msg,
 	)
@@ -159,12 +159,16 @@ func getMessageByLevel(level int) string {
 func getColorByLevel(level int) int {
 	switch level {
 	case DEBUG:
-		return 37
+		// cyan
+		return 36
 	case WARN:
+		// yellow
 		return 33
 	case ERROR, FATAL, PANIC:
+		// red
 		return 31
 	default:
-		return 36
+		// green
+		return 32
 	}
 }
