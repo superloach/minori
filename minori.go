@@ -61,7 +61,7 @@ func (l *Logger) log(level int, msg string) {
 		ws = " "
 	}
 
-	fmt.Fprintf(l.Out, "\x1b[94m[%s]\x1b[0m \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
+	fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
 		time.Now().Format("2006-01-02 15:04:05"),
 		getColorByLevel(level), getMessageByLevel(level), ws,
 		l.Name, msg,
