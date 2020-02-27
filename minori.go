@@ -1,4 +1,3 @@
-// Minori is a minimal logging package for Golang.
 package minori
 
 import (
@@ -10,33 +9,28 @@ import (
 	"github.com/mattn/go-colorable"
 )
 
-var LogLevel = DEBUG
+const (
+	OFF int = iota
+	FATAL
+	PANIC
+	ERROR
+	WARN
+	INFO
+	DEBUG
+)
 
-// SetLevel sets the global log level.
-// Panics if level is invalid.
-func SetLevel(level int) {
-	if level > DEBUG || level < OFF {
-		panic("Invalid Log Level.")
-	}
-
-	LogLevel = level
-}
+var Level = DEBUG
+var Out = colorable.NewColorableStdout()
 
 type Logger struct {
 	Name  string
 	Out   io.Writer
-	Level int // -1 to use the global LogLevel
+	Level int
 }
 
-const (
-	OFF   = 0
-	FATAL = 1
-	PANIC = 2
-	ERROR = 3
-	WARN  = 4
-	INFO  = 5
-	DEBUG = 6
-)
+func GetLogger(name string) *Logger {
+	return &Logger{Name: name, Out: Out, Level: -1}
+}
 
 func (l *Logger) GetLogger(name string) *Logger {
 	return &Logger{
@@ -46,16 +40,16 @@ func (l *Logger) GetLogger(name string) *Logger {
 	}
 }
 
-func (l *Logger) log(level int, msg string) {
-	logl := LogLevel
-	if l.Level != -1 {
-		logl = l.Level
+func (l *Logger) log(typ int, msg string) {
+	level := l.Level
+	if level == -1 {
+		level = Level
 	}
-	if level > logl {
+
+	if typ > level {
 		return
 	}
 
-	// Align the messages nicely.
 	ws := ""
 	if level == INFO || level == WARN {
 		ws = " "
@@ -119,22 +113,6 @@ func (l *Logger) Warn(v ...interface{}) {
 
 func (l *Logger) Warnf(format string, v ...interface{}) {
 	l.log(WARN, fmt.Sprintf(format, v...))
-}
-
-func GetLogger(name string) *Logger {
-	return &Logger{Name: name, Out: colorable.NewColorableStdout(), Level: -1}
-}
-
-func GetLoggerOutput(name string, writer io.Writer) *Logger {
-	return &Logger{Name: name, Out: colorable.NewNonColorable(writer), Level: -1}
-}
-
-func GetLoggerLevel(name string, level int) *Logger {
-	return &Logger{Name: name, Out: colorable.NewColorableStdout(), Level: level}
-}
-
-func GetLoggerLevelOutput(name string, level int, writer io.Writer) *Logger {
-	return &Logger{Name: name, Out: colorable.NewNonColorable(writer), Level: level}
 }
 
 func getMessageByLevel(level int) string {
