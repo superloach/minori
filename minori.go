@@ -40,13 +40,13 @@ func (l *Logger) GetLogger(name string) *Logger {
 	}
 }
 
-func (l *Logger) log(typ int, msg string) {
+func (l *Logger) log(lvl int, msg string) {
 	level := l.Level
 	if level == -1 {
 		level = Level
 	}
 
-	if typ > level {
+	if lvl > level {
 		return
 	}
 
@@ -57,7 +57,7 @@ func (l *Logger) log(typ int, msg string) {
 
 	fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
 		time.Now().Format("2006-01-02 15:04:05"),
-		getColorByLevel(level), getMessageByLevel(level), ws,
+		getColorByLevel(lvl), getMessageByLevel(lvl), ws,
 		l.Name, msg,
 	)
 }
