@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"time"
+	"strings"
 
 	"github.com/mattn/go-colorable"
 )
@@ -40,7 +41,7 @@ func (l *Logger) GetLogger(name string) *Logger {
 	}
 }
 
-func (l *Logger) log(lvl int, msg string) {
+func (l *Logger) log(lvl int, message string) {
 	level := l.Level
 	if level == -1 {
 		level = Level
@@ -55,11 +56,13 @@ func (l *Logger) log(lvl int, msg string) {
 		ws = " "
 	}
 
-	fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
-		time.Now().Format("2006-01-02 15:04:05"),
-		getColorByLevel(lvl), getMessageByLevel(lvl), ws,
-		l.Name, msg,
-	)
+	for _, msg := range strings.Split(message, "\n") {
+		fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
+			time.Now().Format("2006-01-02 15:04:05"),
+			getColorByLevel(lvl), getMessageByLevel(lvl), ws,
+			l.Name, msg,
+		)
+	}
 }
 
 func (l *Logger) Panic(v interface{}) {
