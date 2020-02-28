@@ -51,7 +51,7 @@ func (l *Logger) log(lvl int, msg string) {
 	}
 
 	ws := ""
-	if level == INFO || level == WARN {
+	if lvl == INFO || lvl == WARN {
 		ws = " "
 	}
 
