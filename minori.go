@@ -41,7 +41,7 @@ func (l *Logger) GetLogger(name string) *Logger {
 	}
 }
 
-func (l *Logger) log(lvl int, message string) {
+func (l *Logger) log(lvl int, from, message string) {
 	level := l.Level
 	if level == -1 {
 		level = Level
@@ -60,65 +60,65 @@ func (l *Logger) log(lvl int, message string) {
 		if strings.Trim(msg, " ") == "" {
 			continue
 		}
-		fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]%s\x1b[0m \x1b[35m[%s]\x1b[0m %s\n",
+		fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s%s]\x1b[0m \x1b[35m[%s]\x1b[0m \x1b[37m[%s]\x1b[0m %s\n",
 			time.Now().Format("2006-01-02 15:04:05"),
 			getColorByLevel(lvl), getMessageByLevel(lvl), ws,
-			l.Name, msg,
+			l.Name, from, msg,
 		)
 	}
 }
 
-func (l *Logger) Panic(v interface{}) {
-	l.log(PANIC, fmt.Sprint(v))
+func (l *Logger) Panic(from string, v interface{}) {
+	l.log(PANIC, from, fmt.Sprint(v))
 	panic(v)
 }
 
-func (l *Logger) Panicf(format string, v ...interface{}) {
+func (l *Logger) Panicf(from, format string, v ...interface{}) {
 	p := fmt.Sprintf(format, v...)
-	l.log(PANIC, p)
+	l.log(PANIC, from, p)
 	panic(p)
 }
 
-func (l *Logger) Fatal(v ...interface{}) {
-	l.log(FATAL, fmt.Sprint(v...))
+func (l *Logger) Fatal(from string, v ...interface{}) {
+	l.log(FATAL, from, fmt.Sprint(v...))
 	os.Exit(1)
 }
 
-func (l *Logger) Fatalf(format string, v ...interface{}) {
-	l.log(FATAL, fmt.Sprintf(format, v...))
+func (l *Logger) Fatalf(from, format string, v ...interface{}) {
+	l.log(FATAL, from, fmt.Sprintf(format, v...))
 	os.Exit(1)
 }
 
-func (l *Logger) Info(v ...interface{}) {
-	l.log(INFO, fmt.Sprint(v...))
+func (l *Logger) Info(from string, v ...interface{}) {
+	l.log(INFO, from, fmt.Sprint(v...))
 }
 
-func (l *Logger) Infof(format string, v ...interface{}) {
-	l.log(INFO, fmt.Sprintf(format, v...))
+func (l *Logger) Infof(from string, format string, v ...interface{}) {
+	l.log(INFO, from, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Error(v ...interface{}) {
-	l.log(ERROR, fmt.Sprint(v...))
+func (l *Logger) Error(from string, v ...interface{}) {
+	l.log(ERROR, from, fmt.Sprint(v...))
 }
 
-func (l *Logger) Errorf(format string, v ...interface{}) {
-	l.log(ERROR, fmt.Sprintf(format, v...))
+func (l *Logger) Errorf(from string, format string, v ...interface{}) {
+	l.log(ERROR, from, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Debug(v ...interface{}) {
-	l.log(DEBUG, fmt.Sprint(v...))
+func (l *Logger) Debug(from string, v ...interface{}) {
+	l.log(DEBUG, from, fmt.Sprint(v...))
 }
 
-func (l *Logger) Debugf(format string, v ...interface{}) {
-	l.log(DEBUG, fmt.Sprintf(format, v...))
+func (l *Logger) Debugf(from string, format string, v ...interface{}) {
+	l.log(DEBUG, from, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Warn(v ...interface{}) {
-	l.log(WARN, fmt.Sprint(v...))
+func (l *Logger) Warn(from string, v ...interface{}) {
+	l.log(WARN, from, fmt.Sprint(v...))
 }
 
-func (l *Logger) Warnf(format string, v ...interface{}) {
-	l.log(WARN, fmt.Sprintf(format, v...))
+func (l *Logger) Warnf(from string, format string, v ...interface{}) {
+	l.log(WARN, from, fmt.Sprintf(format, v...))
 }
 
 func getMessageByLevel(level int) string {
