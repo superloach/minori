@@ -51,18 +51,13 @@ func (l *Logger) log(lvl int, from, message string) {
 		return
 	}
 
-	ws := ""
-	if lvl == INFO || lvl == WARN {
-		ws = " "
-	}
-
 	for _, msg := range strings.Split(message, "\n") {
 		if strings.Trim(msg, " ") == "" {
 			continue
 		}
-		fmt.Fprintf(l.Out, "[%s] \x1b[%dm[%s]\x1b[0m%s \x1b[35m[%s]\x1b[0m \x1b[94m[%s]\x1b[0m %s\n",
+		fmt.Fprintf(l.Out, "%s | \x1b[%dm%s\x1b[0m | \x1b[35m%s\x1b[0m | \x1b[94m%s\x1b[0m | %s\n",
 			time.Now().Format("2006-01-02 15:04:05"),
-			getColorByLevel(lvl), getMessageByLevel(lvl), ws,
+			getColorByLevel(lvl), getMessageByLevel(lvl),
 			l.Name, from, msg,
 		)
 	}
