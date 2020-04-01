@@ -60,8 +60,10 @@ func (l *Logger) log(lvl int, from, message string) {
 		if strings.Trim(msg, " ") == "" {
 			continue
 		}
-		fmt.Fprintf(out, "%s | \x1b[%dm%s\x1b[0m | \x1b[35m%s\x1b[0m | \x1b[94m%s\x1b[0m | %s\n",
-			time.Now().Format("2006 01 02 | 15 04 05"),
+		now := time.Now()
+		fmt.Fprintf(out, "\x1b[35m%s\x1b[0m | \x1b[94m%s\x1b[0m | \x1b[%dm%s\x1b[0m | \x1b[35m%s\x1b[0m | \x1b[94m%s\x1b[0m | %s\n",
+			now.Format("2006 01 02"),
+			now.Format("15 04 05"),
 			getColorByLevel(lvl), getMessageByLevel(lvl),
 			l.Name, from, msg,
 		)
